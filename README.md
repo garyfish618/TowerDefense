@@ -1,2 +1,2 @@
-https://rvros.itch.io/animated-pixel-hero
-https://blackspirestudio.itch.io/medieval-pixel-art-asset-free
+https://www.kenney.nl/assets/tower-defense-top-down
+Health bar - By me! Gary Fishell
