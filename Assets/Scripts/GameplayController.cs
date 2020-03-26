@@ -2,27 +2,44 @@
 
 public class GameplayController : MonoBehaviour
 {
-    GameObject[] Enemies;
+    private GameObject[] Enemies;
     public GameObject BasicEnemy;
-    public GameObject[] Waypoints;
-    private int CurrentWayPoint;
-    private bool done;
-    public float speed;
+    public GameObject CannonOnlyEnemy;
+    public GameObject HeavyEnemy;
+    public GameObject WeakFastEnemy;
+    public GameObject BasicTank;
+    public GameObject AdvancedTank;
+    public GameObject BasicAirplane;
+    public GameObject AdvancedAirplane;
 
+
+    public GameObject[] Waypoints;
+    private int EnemiesLeft;
 
     // Start is called before the first frame update
     void Start()
     {
-        //TODO: Update to multiple enemies
-        // enemies = new GameObject[5];
+        //TODO: CHANGE HARD CODED
+        Enemies = new GameObject[8];
 
-        //for (i = 0; i < enemies.Length; i++)
-        //{
-        //  enemies[i] = new basicEnemy();
-        //}
+        GameObject BasicEnemyIn = Instantiate(BasicEnemy) as GameObject;
+        GameObject CannonOnlyEnemyIn = Instantiate(CannonOnlyEnemy) as GameObject;
+        GameObject HeavyEnemyIn = Instantiate(HeavyEnemy) as GameObject;
+        GameObject WeakFastEnemyIn = Instantiate(WeakFastEnemy) as GameObject;
+        GameObject BasicTankIn = Instantiate(BasicTank) as GameObject;
+        GameObject AdvancedTankIn = Instantiate(AdvancedTank) as GameObject;
+        GameObject BasicAirplaneIn = Instantiate(BasicAirplane) as GameObject;
+        GameObject AdvancedAirplaneIn = Instantiate(AdvancedAirplane) as GameObject;
 
-        BasicEnemy = Instantiate(BasicEnemy);
-        done = false;
+        Enemies[0] = BasicEnemyIn;
+        Enemies[1] = CannonOnlyEnemyIn;
+        Enemies[2] = HeavyEnemyIn;
+        Enemies[3] = WeakFastEnemyIn;
+        Enemies[4] = BasicTankIn;
+        Enemies[5] = AdvancedTankIn;
+        Enemies[6] = BasicAirplaneIn;
+        Enemies[7] = AdvancedAirplaneIn;
+        EnemiesLeft = 8;
 
     }
 
@@ -31,59 +48,75 @@ public class GameplayController : MonoBehaviour
     void Update()
     {
 
-        if (!done)
+        if (EnemiesLeft != 0)
         {
-            Debug.Log("Here");
-            int EnemyX = Mathf.FloorToInt(BasicEnemy.transform.position.x);
-            int EnemyY = Mathf.FloorToInt(BasicEnemy.transform.position.y);
-
-            int WayX = Mathf.FloorToInt(Waypoints[CurrentWayPoint].transform.position.x);
-            int WayY = Mathf.FloorToInt(Waypoints[CurrentWayPoint].transform.position.y);
-
-
-
-            if (EnemyX != WayX)
+            for (int i = 0; i < Enemies.Length; i++)
             {
-                
-
-                if (EnemyX < WayX)
+                if (Enemies[i] == null)
                 {
-                    BasicEnemy.transform.Translate(Vector3.down * speed);
+                    continue;
+                }
+
+                int EnemyX = Mathf.FloorToInt(Enemies[i].transform.position.x);
+                int EnemyY = Mathf.FloorToInt(Enemies[i].transform.position.y);
+
+                int WayX = Mathf.FloorToInt(Waypoints[Enemies[i].GetComponent<Enemy>().CurrentWayPoint].transform.position.x);
+                int WayY = Mathf.FloorToInt(Waypoints[Enemies[i].GetComponent<Enemy>().CurrentWayPoint].transform.position.y);
+
+
+
+                if (EnemyX != WayX)
+                {
+
+
+                    if (EnemyX < WayX)
+                    {
+                        Enemies[i].transform.Translate(Vector3.down * Enemies[i].GetComponent<Enemy>().speed);
+                    }
+
+                    else
+                    {
+                        Enemies[i].transform.Translate(Vector3.up * Enemies[i].GetComponent<Enemy>().speed);
+                    }
+
+                }
+
+                else if (EnemyY != WayY)
+                {
+                    if (EnemyY < WayY)
+                    {
+                        Enemies[i].transform.Translate(Vector3.right * Enemies[i].GetComponent<Enemy>().speed);
+                    }
+
+                    else
+                    {
+                        Enemies[i].transform.Translate(Vector3.left * Enemies[i].GetComponent<Enemy>().speed);
+                    }
+
                 }
 
                 else
                 {
-                    BasicEnemy.transform.Translate(Vector3.up * speed);
+                    if (Enemies[i].GetComponent<Enemy>().CurrentWayPoint == Waypoints.Length - 1)
+                    {
+                        Destroy(Enemies[i]);
+                        Enemies[i] = null;
+
+                        EnemiesLeft--;
+
+                    }
+
+                    //If both are equal then we have reached the waypoint. Need to move to next waypoint
+                    if (Enemies[i] != null)
+                    { 
+                        Enemies[i].GetComponent<Enemy>().CurrentWayPoint++;
+                    }
+
                 }
 
             }
 
-            else if (EnemyY != WayY)
-            {
-                if (EnemyY < WayY)
-                {
-                    BasicEnemy.transform.Translate(Vector3.right * speed);
-                }
-
-                else
-                {
-                    BasicEnemy.transform.Translate(Vector3.left * speed);
-                }
-
-            }
-
-            else
-            {
-                if (CurrentWayPoint == Waypoints.Length - 1)
-                {
-                    Destroy(BasicEnemy);
-                    done = true;
-                }
-
-                //If both are equal then we have reached the waypoint. Need to move to next waypoint
-                CurrentWayPoint++;
-        
-            }
+            
         }
     }
 
