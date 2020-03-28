@@ -16,13 +16,13 @@ public class TowerController : MonoBehaviour
     private int BottomTracker;
 
     private  Vector3[] TopSpots = {
-        new Vector3(-21.7f,-11.75f, -0.7f),
-        new Vector3(-21.7f, -8.75f, -0.7f),
-        new Vector3(-21.7f, -5.75f, -0.7f),
-        new Vector3(-21.7f, -2.75f, -0.7f),
-        new Vector3(-21.7f,  1.75f, -0.7f),
-        new Vector3(-21.7f,  4.75f, -0.7f),
-        new Vector3(-21.7f,  7.75f, -0.7f),
+        new Vector3(-20.59f,-11.75f, -0.7f),
+        new Vector3(-20.59f, -8.75f, -0.7f),
+        new Vector3(-20.59f, -5.75f, -0.7f),
+        new Vector3(-20.59f, -2.75f, -0.7f),
+        new Vector3(-20.59f,  1.75f, -0.7f),
+        new Vector3(-20.59f,  4.75f, -0.7f),
+        new Vector3(-20.59f,  7.75f, -0.7f),
         new Vector3(2.22f, 8.0f, -0.7f),
         new Vector3(2.22f, 5.0f, -0.7f),
         new Vector3(2.22f, 2.0f, -0.7f),
@@ -69,6 +69,9 @@ public class TowerController : MonoBehaviour
 
 
         baseLayer = GameObject.Find("/Grid/BaseMap").GetComponent<Tilemap>();
+
+
+        TowersActive = new List<GameObject>();
     }
 
     void Update()
@@ -91,30 +94,30 @@ public class TowerController : MonoBehaviour
 
             if (type == "BasicRocket")
             {
-                Instantiate(BasicRocket, TopSpots[TowerSpot], Quaternion.identity);
+                TowersActive.Add(Instantiate(BasicRocket, TopSpots[TowerSpot], Quaternion.identity));
             }
 
             else if (type == "AdvancedRocket")
             {
-                Instantiate(AdvancedRocket, TopSpots[TowerSpot], Quaternion.identity);
+                TowersActive.Add(Instantiate(AdvancedRocket, TopSpots[TowerSpot], Quaternion.identity));
 
             }
 
             else if (type == "BigRocket")
             {
-                Instantiate(BigRocket, TopSpots[TowerSpot], Quaternion.identity);
+                TowersActive.Add(Instantiate(BigRocket, TopSpots[TowerSpot], Quaternion.identity));
 
 
             }
 
             else if (type == "BasicCannon")
             {
-                Instantiate(BasicCannon, TopSpots[TowerSpot], Quaternion.identity);
+                TowersActive.Add(Instantiate(BasicCannon, TopSpots[TowerSpot], Quaternion.identity));
             }
 
             else
             {
-                Instantiate(AdvancedCannon, TopSpots[TowerSpot], Quaternion.identity);
+                TowersActive.Add(Instantiate(AdvancedCannon, TopSpots[TowerSpot], Quaternion.identity));
             }
             
              TopTracker--;
@@ -131,27 +134,27 @@ public class TowerController : MonoBehaviour
 
             if (type == "BasicRocket")
             {
-                Instantiate(BasicRocket, BottomSpots[TowerSpot], Quaternion.identity);
+                TowersActive.Add(Instantiate(BasicRocket, BottomSpots[TowerSpot], Quaternion.identity));
             }
 
             else if (type == "AdvancedRocket")
             {
-                Instantiate(AdvancedRocket, BottomSpots[TowerSpot], Quaternion.identity);
+                TowersActive.Add(Instantiate(AdvancedRocket, BottomSpots[TowerSpot], Quaternion.identity));
             }
 
             else if (type == "BigRocket")
             {
-                Instantiate(BigRocket, BottomSpots[TowerSpot], Quaternion.identity);
+                TowersActive.Add(Instantiate(BigRocket, BottomSpots[TowerSpot], Quaternion.identity));
             }
 
             else if (type == "BasicCannon")
             {
-                Instantiate(BasicCannon, BottomSpots[TowerSpot], Quaternion.identity);
+                TowersActive.Add(Instantiate(BasicCannon, BottomSpots[TowerSpot], Quaternion.identity));
             }
 
             else
             {
-                Instantiate(AdvancedCannon, BottomSpots[TowerSpot], Quaternion.identity);
+                TowersActive.Add(Instantiate(AdvancedCannon, BottomSpots[TowerSpot], Quaternion.identity));
             }
 
             BottomTracker--;
