@@ -3,7 +3,23 @@ guid: 7c157ac4d63efa9468bb3d4afe2dcc99
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - BasicEnemy: {fileID: 6867851907722086958, guid: a08a9097dba1980418401677f1a90c40,
+      type: 3}
+  - CannonOnlyEnemy: {fileID: 4267959197656098282, guid: 1e67d2236836e2c449525772c919cbdf,
+      type: 3}
+  - HeavyEnemy: {fileID: 4583414289744218891, guid: f6dee81ca9f56e34aad05951eb3dc37e,
+      type: 3}
+  - WeakFastEnemy: {fileID: 9062788120648184873, guid: ac02a1ae78b0d004cbc025ef38bbbf04,
+      type: 3}
+  - BasicTank: {fileID: 4175308845361984410, guid: 151b4aa0188aeb64fb98e3d1978cb70b,
+      type: 3}
+  - AdvancedTank: {fileID: 5612238078208513351, guid: ddfaf8ac2f0ec4f47adb80ca872f7544,
+      type: 3}
+  - BasicAirplane: {fileID: 1943775458224328891, guid: 0b1d99f53f49645459621032fbc5be4d,
+      type: 3}
+  - AdvancedAirplane: {fileID: 6515938705844687918, guid: b6fb00f25f89d2441bd4cc475707a0ef,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

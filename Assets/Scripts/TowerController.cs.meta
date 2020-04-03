@@ -3,7 +3,17 @@ guid: f9afb32f8d3dc014dab632112420e79b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - BasicRocket: {fileID: 1459977678139326294, guid: e13cb45c2d432a84497224bea59c1cda,
+      type: 3}
+  - AdvancedRocket: {fileID: 7172557993472228428, guid: 1ad0bdaf950c53e4eba0099ad6f72209,
+      type: 3}
+  - BigRocket: {fileID: 2515354292252231268, guid: 7ff2f35de07931c4ea50a9896837085f,
+      type: 3}
+  - BasicCannon: {fileID: 2642649874982193716, guid: a86ee67c317d653429084bd5dc2f0223,
+      type: 3}
+  - AdvancedCannon: {fileID: 6275900865102776145, guid: 7436a9f2be669f640b03c80962bc3a96,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -11,6 +11,8 @@ public class GameplayController : MonoBehaviour
     public GameObject AdvancedTank;
     public GameObject BasicAirplane;
     public GameObject AdvancedAirplane;
+    public UIController ui;
+    public bool TestMode;
 
 
     public GameObject[] Waypoints;
@@ -20,6 +22,15 @@ public class GameplayController : MonoBehaviour
     void Start()
     {
         //TODO: CHANGE HARD CODED
+        if (TestMode)
+        {
+            Enemies = new GameObject[1];
+
+            Enemies[0] = Instantiate(BasicTank) as GameObject;
+            EnemiesLeft = 1;
+            return;
+        }
+
         Enemies = new GameObject[8];
 
         GameObject BasicEnemyIn = Instantiate(BasicEnemy) as GameObject;
@@ -48,6 +59,7 @@ public class GameplayController : MonoBehaviour
     void Update()
     {
 
+       
         if (EnemiesLeft != 0)
         {
             for (int i = 0; i < Enemies.Length; i++)
@@ -99,6 +111,9 @@ public class GameplayController : MonoBehaviour
                 {
                     if (Enemies[i].GetComponent<Enemy>().CurrentWayPoint == Waypoints.Length - 1)
                     {
+
+
+                        ui.HealthBar.value -= Enemies[i].GetComponent<Enemy>().damage;
                         Destroy(Enemies[i]);
                         Enemies[i] = null;
 
