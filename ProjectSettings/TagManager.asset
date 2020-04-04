@@ -8,6 +8,7 @@ TagManager:
   - Missile
   - Turret
   - Projectile
+  - Explosive
   layers:
   - Default
   - TransparentFX

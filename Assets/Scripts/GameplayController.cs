@@ -13,44 +13,26 @@ public class GameplayController : MonoBehaviour
     public GameObject AdvancedAirplane;
     public UIController ui;
     public bool TestMode;
+    public int EnemiesLeft;
 
 
     public GameObject[] Waypoints;
-    private int EnemiesLeft;
+    
+
+
+    //Game states
+    public bool BuyPhase;
+    public bool PlayPhase;
+    public bool GameOver;
 
     // Start is called before the first frame update
     void Start()
     {
-        //TODO: CHANGE HARD CODED
-        if (TestMode)
-        {
-            Enemies = new GameObject[1];
+        BuyPhase = true;
+        PlayPhase = false;
+        GameOver = false;
 
-            Enemies[0] = Instantiate(BasicTank) as GameObject;
-            EnemiesLeft = 1;
-            return;
-        }
-
-        Enemies = new GameObject[8];
-
-        GameObject BasicEnemyIn = Instantiate(BasicEnemy) as GameObject;
-        GameObject CannonOnlyEnemyIn = Instantiate(CannonOnlyEnemy) as GameObject;
-        GameObject HeavyEnemyIn = Instantiate(HeavyEnemy) as GameObject;
-        GameObject WeakFastEnemyIn = Instantiate(WeakFastEnemy) as GameObject;
-        GameObject BasicTankIn = Instantiate(BasicTank) as GameObject;
-        GameObject AdvancedTankIn = Instantiate(AdvancedTank) as GameObject;
-        GameObject BasicAirplaneIn = Instantiate(BasicAirplane) as GameObject;
-        GameObject AdvancedAirplaneIn = Instantiate(AdvancedAirplane) as GameObject;
-
-        Enemies[0] = BasicEnemyIn;
-        Enemies[1] = CannonOnlyEnemyIn;
-        Enemies[2] = HeavyEnemyIn;
-        Enemies[3] = WeakFastEnemyIn;
-        Enemies[4] = BasicTankIn;
-        Enemies[5] = AdvancedTankIn;
-        Enemies[6] = BasicAirplaneIn;
-        Enemies[7] = AdvancedAirplaneIn;
-        EnemiesLeft = 8;
+        
 
     }
 
@@ -58,9 +40,7 @@ public class GameplayController : MonoBehaviour
 
     void Update()
     {
-
-       
-        if (EnemiesLeft != 0)
+        if (EnemiesLeft != 0 && PlayPhase)
         {
             for (int i = 0; i < Enemies.Length; i++)
             {
@@ -115,6 +95,10 @@ public class GameplayController : MonoBehaviour
                 {
                     if (Enemies[i].GetComponent<Enemy>().CurrentWayPoint == Waypoints.Length - 1)
                     {
+                        if (ui.HealthBar.value - Enemies[i].GetComponent<Enemy>().damage <= 0) {
+                            PlayPhase = false;
+                            GameOver = true;
+                        }
 
 
                         ui.HealthBar.value -= Enemies[i].GetComponent<Enemy>().damage;
@@ -127,16 +111,74 @@ public class GameplayController : MonoBehaviour
 
                     //If both are equal then we have reached the waypoint. Need to move to next waypoint
                     if (Enemies[i] != null)
-                    { 
+                    {
                         Enemies[i].GetComponent<Enemy>().CurrentWayPoint++;
                     }
 
                 }
 
             }
-
-            
         }
+
+        else if (EnemiesLeft == 0 && PlayPhase) {
+            PlayPhase = false;
+            BuyPhase = true;
+
+            ui.NextLevel();
+            ui.EnterBuyPhase();
+        
+        }
+
+    }
+
+    public void StartGame() {
+        //Only if we are in Buy Phase can we move to Play phase. If the game is over, simply ignore request to start next level
+        if (BuyPhase == true) {
+            BuyPhase = false;
+            PlayPhase = true;
+            SpawnEnemies();
+            return;
+        }
+
+        return;
+
+    
+    }
+
+
+    private void SpawnEnemies() {
+        
+        if (TestMode)
+        {
+            Enemies = new GameObject[1];
+
+            Enemies[0] = Instantiate(BasicTank) as GameObject;
+            EnemiesLeft = 1;
+            return;
+        }
+
+        //TODO: CHANGE HARD CODED
+        Enemies = new GameObject[8];
+
+        GameObject BasicEnemyIn = Instantiate(BasicEnemy) as GameObject;
+        GameObject CannonOnlyEnemyIn = Instantiate(CannonOnlyEnemy) as GameObject;
+        GameObject HeavyEnemyIn = Instantiate(HeavyEnemy) as GameObject;
+        GameObject WeakFastEnemyIn = Instantiate(WeakFastEnemy) as GameObject;
+        GameObject BasicTankIn = Instantiate(BasicTank) as GameObject;
+        GameObject AdvancedTankIn = Instantiate(AdvancedTank) as GameObject;
+        GameObject BasicAirplaneIn = Instantiate(BasicAirplane) as GameObject;
+        GameObject AdvancedAirplaneIn = Instantiate(AdvancedAirplane) as GameObject;
+
+        Enemies[0] = BasicEnemyIn;
+        Enemies[1] = CannonOnlyEnemyIn;
+        Enemies[2] = HeavyEnemyIn;
+        Enemies[3] = WeakFastEnemyIn;
+        Enemies[4] = BasicTankIn;
+        Enemies[5] = AdvancedTankIn;
+        Enemies[6] = BasicAirplaneIn;
+        Enemies[7] = AdvancedAirplaneIn;
+        EnemiesLeft = 8;
+
     }
 
 

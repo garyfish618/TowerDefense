@@ -8,26 +8,45 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
     public Slider HealthBar;
-    public Text Money;
-    public Button Purchase;
+    public Text MoneyText;
+    public Button PurchaseButton;
+    public Button StartButton;
     public Button Cancel;
     public GameObject PurchasePanel;
     public TowerController Towers;
     public Text SelectTowerText;
     public Dropdown SelectTower;
+    public int Money;
+    public GameplayController game;
+    public int level;
+    public Text CurrentLevel;
 
     private bool PurchaseOpen;
     private bool PlacementMode;
     private string PlacementType;
 
+    private Dictionary<string, int> prices;
+
     // Start is called before the first frame update
     void Start()
     {
+        //Price table for towers
+        prices = new Dictionary<string, int>();
+        prices.Add("BasicRocket", 100);
+        prices.Add("AdvancedRocket", 250);
+        prices.Add("BigRocket", 400);
+        prices.Add("BasicCannon", 700);
+        prices.Add("AdvancedCannon", 900);
+
         PurchasePanel.SetActive(false);
         PurchaseOpen = false;
         PlacementMode = false;
         SelectTowerText.gameObject.SetActive(false);
 
+        MoneyText.text = "$" + Money;
+
+        level = 1;
+        CurrentLevel.text = level.ToString();
     }
 
     // Update is called once per frame
@@ -39,6 +58,15 @@ public class UIController : MonoBehaviour
 
     public void BuyingItemPressed(Button button)
     {
+        int price = 0;
+        prices.TryGetValue(button.name, out price);
+
+        if (price > Money) {
+            //If user doesnt have enough money, ignore request
+            return;
+        
+        }
+
         PlacementMode = true;
         PurchaseOpen = false;
         PurchasePanel.SetActive(false); //Just to hide
@@ -48,19 +76,33 @@ public class UIController : MonoBehaviour
 
     public void PurchasePressed()
     {
-        if (PurchaseOpen || PlacementMode)
+        if (PurchaseOpen || PlacementMode || !(game.BuyPhase))
         {
-            // If window is already open or we are trying to place a tower, just ignore request
+            // If window is already open, we are trying to place a tower, or we are not in buy phase, just ignore request
             return;
         }
 
         else
         {
-            //TODO: Add check to make sure level is currently not playing
             PurchasePanel.SetActive(true);
             PurchaseOpen = true;
         }
     
+    }
+
+    public void StartPressed() {
+        if (PurchaseOpen || PlacementMode || !(game.BuyPhase))
+        {
+            // If window is already open, we are trying to place a tower, or we are not in buy phase, just ignore request
+            return;
+        }
+
+        else {
+            StartButton.gameObject.SetActive(false);
+            PurchaseButton.gameObject.SetActive(false);
+            game.StartGame();
+        
+        }
     }
 
     public void CancelPurchasePressed()
@@ -87,6 +129,9 @@ public class UIController : MonoBehaviour
         {
             Towers.PlaceTower(PlacementType,1);
         }
+        int price = 0;
+        prices.TryGetValue(PlacementType, out price);
+        RemoveMoney(price);
         PlacementType = null;
         return;
     }
@@ -97,6 +142,31 @@ public class UIController : MonoBehaviour
         PlacementMode = false;
         SelectTowerText.gameObject.SetActive(false);
         PurchasePressed();
+    }
+
+
+    public void AddMoney(int val) {
+        Money += val;
+
+        MoneyText.text = "$" + Money;
+    }
+
+
+    public void RemoveMoney(int val) {
+        Money -= val;
+        MoneyText.text = "$" + Money;
+
+    }
+
+    public void EnterBuyPhase() {
+        StartButton.gameObject.SetActive(true);
+        PurchaseButton.gameObject.SetActive(true);
+
+    }
+
+    public void NextLevel() {
+        level++;
+        CurrentLevel.text = level.ToString();
     }
 
 

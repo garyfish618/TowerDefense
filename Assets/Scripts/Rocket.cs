@@ -6,6 +6,7 @@ public class Rocket : MonoBehaviour
 {
     public float FlySpeed;
     public Rigidbody2D rig;
+    public int RocketDamage;
 
     // Start is called before the first frame update
     void Start()

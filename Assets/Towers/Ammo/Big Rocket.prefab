@@ -145,3 +145,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FlySpeed: 50
   rig: {fileID: 6528298195194385973}
+  RocketDamage: 25
