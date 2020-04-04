@@ -20,4 +20,12 @@ public class Enemy : MonoBehaviour
     {
         
     }
+
+    void OnTriggerEnter2D(Collider2D col) {
+
+        if (col.gameObject.tag == "Projectile") {
+            Destroy(col.gameObject);
+        }
+        
+    }
 }

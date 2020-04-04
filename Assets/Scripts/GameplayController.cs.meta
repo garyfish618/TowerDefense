@@ -12,14 +12,15 @@ MonoImporter:
       type: 3}
   - WeakFastEnemy: {fileID: 9062788120648184873, guid: ac02a1ae78b0d004cbc025ef38bbbf04,
       type: 3}
-  - BasicTank: {fileID: 4175308845361984410, guid: 151b4aa0188aeb64fb98e3d1978cb70b,
+  - BasicTank: {fileID: 122559845281120087, guid: 151b4aa0188aeb64fb98e3d1978cb70b,
       type: 3}
-  - AdvancedTank: {fileID: 5612238078208513351, guid: ddfaf8ac2f0ec4f47adb80ca872f7544,
+  - AdvancedTank: {fileID: 1941723513553406293, guid: ddfaf8ac2f0ec4f47adb80ca872f7544,
       type: 3}
-  - BasicAirplane: {fileID: 1943775458224328891, guid: 0b1d99f53f49645459621032fbc5be4d,
+  - BasicAirplane: {fileID: 8729854886791849107, guid: 0b1d99f53f49645459621032fbc5be4d,
       type: 3}
-  - AdvancedAirplane: {fileID: 6515938705844687918, guid: b6fb00f25f89d2441bd4cc475707a0ef,
+  - AdvancedAirplane: {fileID: 5180225372904814277, guid: b6fb00f25f89d2441bd4cc475707a0ef,
       type: 3}
+  - ui: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

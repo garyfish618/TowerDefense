@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 4744478516605367460}
   m_Layer: 0
   m_Name: AdvancedCannon
-  m_TagString: Untagged
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca550a1a1cdbfc347b2ef46027824b3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.5
+  shootSpeed: 0
 --- !u!1 &9074821050430654201
 GameObject:
   m_ObjectHideFlags: 0

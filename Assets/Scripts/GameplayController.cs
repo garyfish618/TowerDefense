@@ -83,11 +83,13 @@ public class GameplayController : MonoBehaviour
 
                     if (EnemyX < WayX)
                     {
+                        Enemies[i].transform.GetChild(0).transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
                         Enemies[i].transform.Translate(Vector3.down * Enemies[i].GetComponent<Enemy>().speed);
                     }
 
                     else
                     {
+                        Enemies[i].transform.GetChild(0).transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
                         Enemies[i].transform.Translate(Vector3.up * Enemies[i].GetComponent<Enemy>().speed);
                     }
 
@@ -97,11 +99,13 @@ public class GameplayController : MonoBehaviour
                 {
                     if (EnemyY < WayY)
                     {
+                        Enemies[i].transform.GetChild(0).transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
                         Enemies[i].transform.Translate(Vector3.right * Enemies[i].GetComponent<Enemy>().speed);
                     }
 
                     else
                     {
+                        Enemies[i].transform.GetChild(0).transform.rotation = Quaternion.Euler(new Vector3(0, 0, -90));
                         Enemies[i].transform.Translate(Vector3.left * Enemies[i].GetComponent<Enemy>().speed);
                     }
 
