@@ -9,6 +9,8 @@ TagManager:
   - Turret
   - Projectile
   - Explosive
+  - Projectile-Double
+  - CannonOnlyEnemy
   layers:
   - Default
   - TransparentFX

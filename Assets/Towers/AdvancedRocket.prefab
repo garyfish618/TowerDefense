@@ -114,7 +114,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca550a1a1cdbfc347b2ef46027824b3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootSpeed: 0.5
+  shootSpeed: 1
+  turretDamage: 0
 --- !u!50 &7797297477147107441
 Rigidbody2D:
   serializedVersion: 4

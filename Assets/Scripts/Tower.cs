@@ -5,7 +5,9 @@ using UnityEngine;
 public class Tower : MonoBehaviour
 {
     public float shootSpeed;
+    public int turretDamage;
     private bool isShooting;
+    private GameObject target;
 
     public Tower()
     {
@@ -23,6 +25,21 @@ public class Tower : MonoBehaviour
 
         }
 
+        //Assign a new target if we have none
+
+        if (target == null && col.gameObject.tag == "Enemy") {
+
+            //If the potential target is a cannon only enemy and is in range of a missile launcher, ignore it
+            if (col.gameObject.transform.GetChild(0).tag == "CannonOnlyEnemy" && transform.gameObject.tag == "Missile")
+            {
+                return;
+            }
+
+            target = col.gameObject;
+            
+            col.gameObject.GetComponent<Enemy>().targeted = true;
+        }
+
     }
 
     void OnCollisionStay2D(Collision2D col)
@@ -35,8 +52,8 @@ public class Tower : MonoBehaviour
 
         }
 
-        //Ignore towers
-        if (col.gameObject.tag == "Enemy") 
+        //Ignore towers and ensure we are focusing on shooting target
+        if (col.gameObject.tag == "Enemy" && col.gameObject == target) 
         {
             GameObject enemy = col.gameObject;
 
@@ -50,15 +67,22 @@ public class Tower : MonoBehaviour
             transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
 
 
-            StartCoroutine(ShootEnemy(transform.gameObject.tag));
+            StartCoroutine(ShootEnemy(transform.gameObject.tag, col.gameObject.GetComponent<Enemy>()));
         }
-        
-
-        
-     
     }
 
-    IEnumerator ShootEnemy(string tag)
+    void OnCollisionExit2D(Collision2D col) {
+        
+        //Target is leaving turret range, will need a new target
+        if (col.gameObject == target) {
+            target = null;
+            col.gameObject.GetComponent<Enemy>().targeted = true;
+
+        }
+    
+    }
+
+    IEnumerator ShootEnemy(string tag, Enemy en)
     {
         if (isShooting)
         {
@@ -71,6 +95,8 @@ public class Tower : MonoBehaviour
                     
             transform.GetChild(0).gameObject.SetActive(true);
 
+            en.ReduceHealth(turretDamage);
+
             yield return new WaitForSeconds(0.5f);
 
             transform.GetChild(0).gameObject.SetActive(false);
@@ -82,7 +108,6 @@ public class Tower : MonoBehaviour
         
         if (tag == "Missile")
         {
-
             transform.gameObject.GetComponent<ShootRocket>().Fire();
             yield return new WaitForSeconds(shootSpeed);
 

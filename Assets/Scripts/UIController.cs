@@ -44,8 +44,6 @@ public class UIController : MonoBehaviour
         SelectTowerText.gameObject.SetActive(false);
 
         MoneyText.text = "$" + Money;
-
-        level = 1;
         CurrentLevel.text = level.ToString();
     }
 

@@ -134,7 +134,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca550a1a1cdbfc347b2ef46027824b3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootSpeed: 0
+  shootSpeed: 0.15
+  turretDamage: 10
 --- !u!1 &2992580132428931285
 GameObject:
   m_ObjectHideFlags: 0

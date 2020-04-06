@@ -10,7 +10,11 @@ public class Enemy : MonoBehaviour
     public int CurrentWayPoint;
     public float damage;
     public Slider HealthBar;
+    public int SpawnCooldown;
     public int worth;
+    public bool JustSpawned; // This tells our gameplay controller that this enemy just spawned and their needs to be a wait before it moved
+    public bool OnWait; // Tells our gameplay controller that this enemy is currently on a waiting period and does not need to be moved
+    public bool targeted;
     
 
     private int OriginalHealth;
@@ -35,11 +39,16 @@ public class Enemy : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D col) {
+        //Only register projectile collisions
+        if (col.gameObject.tag == "Projectile" || col.gameObject.tag == "Projectile-Double") {
 
-        if (col.gameObject.tag == "Projectile") {
+            //If we are hit by a projectile but we are not targeted, it will be ignored unless it is a double missile
+            if (col.gameObject.tag == "Projectile" && !targeted) {
+                return;
+            
+            } 
 
             Destroy(col.gameObject);
-
             ReduceHealth(col.gameObject.GetComponent<Rocket>().RocketDamage);
         }
 

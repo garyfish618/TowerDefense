@@ -143,6 +143,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acafadfdc1aec984dba5d8c363df1c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FlySpeed: 50
+  FlySpeed: 25
   rig: {fileID: 6528298195194385973}
-  RocketDamage: 25
+  RocketDamage: 20
