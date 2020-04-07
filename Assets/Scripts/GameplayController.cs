@@ -123,6 +123,7 @@ public class GameplayController : MonoBehaviour
                         if (ui.HealthBar.value - enemy.damage <= 0) {
                             PlayPhase = false;
                             GameOver = true;
+                            ui.GameOver(); 
                         }
 
 

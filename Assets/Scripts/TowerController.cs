@@ -64,8 +64,8 @@ public class TowerController : MonoBehaviour
     void Start()
     {
         //Top and Bottom trackers keep track of the last used tower spot. Any index beyond these trackers is either invalid or is being used.
-        TopTracker = TopSpots.Length - 1;
-        BottomTracker = BottomSpots.Length - 1;
+        TopTracker = TopSpots.Length;
+        BottomTracker = BottomSpots.Length;
 
 
         baseLayer = GameObject.Find("/Grid/BaseMap").GetComponent<Tilemap>();

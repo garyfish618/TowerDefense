@@ -4,6 +4,8 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.CodeDom;
 
 public class UIController : MonoBehaviour
 {
@@ -11,7 +13,6 @@ public class UIController : MonoBehaviour
     public Text MoneyText;
     public Button PurchaseButton;
     public Button StartButton;
-    public Button Cancel;
     public GameObject PurchasePanel;
     public TowerController Towers;
     public Text SelectTowerText;
@@ -20,10 +21,18 @@ public class UIController : MonoBehaviour
     public GameplayController game;
     public int level;
     public Text CurrentLevel;
+    public Text GameOverText;
+    public GameObject TowersFull;
+
 
     private bool PurchaseOpen;
     private bool PlacementMode;
     private string PlacementType;
+    private int TopTurretsPlaced;
+    private int BottomTurretsPlaced;
+
+    private const int TOP_SPOTS = 15;
+    private const int BOTTOM_SPOTS = 22;
 
     private Dictionary<string, int> prices;
 
@@ -54,6 +63,19 @@ public class UIController : MonoBehaviour
     }
 
 
+    public void GameOver() 
+    {
+        GameOverText.gameObject.SetActive(true);
+    
+    
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+
+    }
+
     public void BuyingItemPressed(Button button)
     {
         int price = 0;
@@ -68,12 +90,32 @@ public class UIController : MonoBehaviour
         PlacementMode = true;
         PurchaseOpen = false;
         PurchasePanel.SetActive(false); //Just to hide
+
+        if (TopTurretsPlaced == TOP_SPOTS && SelectTowerText.transform.GetChild(0).gameObject.GetComponent<Dropdown>().options.Count == 2)
+        {
+
+            //Remove option of selecting top spots
+            SelectTowerText.transform.GetChild(0).gameObject.GetComponent<Dropdown>().options.RemoveAt(0);
+            SelectTowerText.transform.GetChild(0).gameObject.GetComponent<Dropdown>().value = 1;
+
+        }
+
+        else if (BottomTurretsPlaced == BOTTOM_SPOTS && SelectTowerText.transform.GetChild(0).gameObject.GetComponent<Dropdown>().options.Count == 2)
+        {
+            //Remove option of selecting bottom spots
+            SelectTowerText.transform.GetChild(0).gameObject.GetComponent<Dropdown>().options.RemoveAt(1);
+            SelectTowerText.transform.GetChild(0).gameObject.GetComponent<Dropdown>().value = 0;
+        }
+
         SelectTowerText.gameObject.SetActive(true);
         PlacementType = button.name;
+
+
     }
 
     public void PurchasePressed()
     {
+
         if (PurchaseOpen || PlacementMode || !(game.BuyPhase))
         {
             // If window is already open, we are trying to place a tower, or we are not in buy phase, just ignore request
@@ -96,6 +138,7 @@ public class UIController : MonoBehaviour
         }
 
         else {
+            TowersFull.SetActive(false);
             StartButton.gameObject.SetActive(false);
             PurchaseButton.gameObject.SetActive(false);
             game.StartGame();
@@ -118,15 +161,24 @@ public class UIController : MonoBehaviour
        PlacementMode = false;
        SelectTowerText.gameObject.SetActive(false);
 
-        if (choice == 0)
+        if (choice == 0 && TopTurretsPlaced != TOP_SPOTS)
         {
+            TopTurretsPlaced++;
             Towers.PlaceTower(PlacementType,0);
         }
 
         else
         {
+            BottomTurretsPlaced++;
             Towers.PlaceTower(PlacementType,1);
         }
+
+        if (BottomTurretsPlaced == BOTTOM_SPOTS && TopTurretsPlaced == TOP_SPOTS)
+        {
+            PurchaseButton.gameObject.SetActive(false);
+            TowersFull.SetActive(true);
+        }
+
         int price = 0;
         prices.TryGetValue(PlacementType, out price);
         RemoveMoney(price);
@@ -158,7 +210,13 @@ public class UIController : MonoBehaviour
 
     public void EnterBuyPhase() {
         StartButton.gameObject.SetActive(true);
-        PurchaseButton.gameObject.SetActive(true);
+
+        //If there are no more open turret spots, do not show the purchase button
+        if (TopTurretsPlaced != TOP_SPOTS && BottomTurretsPlaced != BOTTOM_SPOTS) { 
+            PurchaseButton.gameObject.SetActive(true);
+            
+        }
+
 
     }
 
