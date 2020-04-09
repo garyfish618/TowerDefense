@@ -25,36 +25,39 @@ public class Tower : MonoBehaviour
 
         }
 
-        //Assign a new target if we have none
-
-        if (target == null && col.gameObject.tag == "Enemy") {
-
-            //If the potential target is a cannon only enemy and is in range of a missile launcher, ignore it
-            if (col.gameObject.transform.GetChild(0).tag == "CannonOnlyEnemy" && transform.gameObject.tag == "Missile")
-            {
-                return;
-            }
-
-            target = col.gameObject;
-            
-            col.gameObject.GetComponent<Enemy>().targeted = true;
-        }
-
+        
     }
 
     void OnCollisionStay2D(Collision2D col)
     {
+        
 
         if (col.gameObject.tag != "Enemy")
         {
 
             Physics2D.IgnoreCollision(col.gameObject.GetComponent<Collider2D>(), transform.gameObject.GetComponent<Collider2D>());
-
+            return;
         }
-
+        
         //Ignore towers and ensure we are focusing on shooting target
-        if (col.gameObject.tag == "Enemy" && col.gameObject == target) 
+        if (col.gameObject.tag == "Enemy" && (col.gameObject == target || target == null) ) 
         {
+            //Check if tower lost target and needs one that is already inside
+           if (target == null) {
+
+                //If the potential target is a cannon only enemy and is in range of a missile launcher, ignore it
+                if (col.gameObject.transform.GetChild(0).tag == "CannonOnlyEnemy" && transform.gameObject.tag == "Missile")
+                {
+                    return;
+                }
+                Debug.Log("Gaining target:" + transform.name + "Enemy is: " + col.transform.name);
+                target = col.gameObject;
+                
+                col.gameObject.GetComponent<Enemy>().targeted = true;
+            }
+
+
+
             GameObject enemy = col.gameObject;
 
             Vector3 targetPosition = enemy.transform.position;
@@ -76,7 +79,8 @@ public class Tower : MonoBehaviour
         //Target is leaving turret range, will need a new target
         if (col.gameObject == target) {
             target = null;
-            col.gameObject.GetComponent<Enemy>().targeted = true;
+            Debug.Log("Losing target:" + transform.name + "Enemy is: " + col.transform.name);
+            col.gameObject.GetComponent<Enemy>().targeted = false;
 
         }
     

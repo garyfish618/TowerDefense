@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class GameplayController : MonoBehaviour
 {
-    private GameObject[] Enemies;
     public GameObject BasicEnemy;
     public GameObject CannonOnlyEnemy;
     public GameObject HeavyEnemy;
@@ -14,35 +13,20 @@ public class GameplayController : MonoBehaviour
     public GameObject BasicAirplane;
     public GameObject AdvancedAirplane;
     public UIController ui;
-    public bool TestMode;
     public int EnemiesLeft;
-
-
     public GameObject[] Waypoints;
-    
+    private GameObject[] Enemies;
+    private PersistenceController contr;
 
 
-    //Game states
-    public bool BuyPhase;
-    public bool PlayPhase;
-    public bool GameOver;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        BuyPhase = true;
-        PlayPhase = false;
-        GameOver = false;
-
-        
+    void Start() {
+        contr = PersistenceController.Instance;
 
     }
 
-
-
     void Update()
     {
-        if (EnemiesLeft != 0 && PlayPhase)
+        if (EnemiesLeft != 0 && contr.PlayPhase)
         {
             for (int i = 0; i < Enemies.Length; i++)
             {
@@ -121,13 +105,12 @@ public class GameplayController : MonoBehaviour
                     if (Enemies[i].GetComponent<Enemy>().CurrentWayPoint == Waypoints.Length - 1)
                     {
                         if (ui.HealthBar.value - enemy.damage <= 0) {
-                            PlayPhase = false;
-                            GameOver = true;
+                            contr.PlayPhase = false;
+                            contr.GameOver = true;
                             ui.GameOver(); 
                         }
-
-
-                        ui.HealthBar.value -= enemy.damage;
+                        contr.health -= enemy.damage;
+                        ui.HealthBar.value = contr.health;
                         Destroy(Enemies[i]);
                         Enemies[i] = null;
 
@@ -146,9 +129,9 @@ public class GameplayController : MonoBehaviour
             }
         }
 
-        else if (EnemiesLeft == 0 && PlayPhase) {
-            PlayPhase = false;
-            BuyPhase = true;
+        else if (EnemiesLeft == 0 && contr.PlayPhase) {
+            contr.PlayPhase = false;
+            contr.BuyPhase = true;
 
             ui.NextLevel();
             ui.EnterBuyPhase();
@@ -159,8 +142,8 @@ public class GameplayController : MonoBehaviour
 
     public void StartGame() {
         //Only if we are in Buy Phase can we move to Play phase. If the game is over, simply ignore request to start next level
-        if (BuyPhase == true) {
-            BuyPhase = false;
+        if (contr.BuyPhase == true) {
+            contr.BuyPhase = false;
             SpawnEnemies();
             return;
         }
@@ -178,23 +161,37 @@ public class GameplayController : MonoBehaviour
 
     }
 
-
     private void SpawnEnemies()
     {
 
-        if (TestMode)
+        if (contr.TestMode)
         {
-            Enemies = new GameObject[1];
+            Enemies = new GameObject[8];
 
             Enemies[0] = Instantiate(BasicTank) as GameObject;
-            EnemiesLeft = 1;
-            Enemies[0].GetComponent<Enemy>().JustSpawned = false;
-            PlayPhase = true;
+            Enemies[1] = Instantiate(AdvancedTank) as GameObject;
+            Enemies[2] = Instantiate(BasicAirplane) as GameObject;
+            Enemies[3] = Instantiate(AdvancedAirplane) as GameObject;
+            Enemies[4] = Instantiate(BasicEnemy) as GameObject;
+            Enemies[5] = Instantiate(HeavyEnemy) as GameObject;
+            Enemies[6] = Instantiate(WeakFastEnemy) as GameObject;
+            Enemies[7] = Instantiate(CannonOnlyEnemy) as GameObject;
+
+
+            EnemiesLeft = 8;
+
+
+            for(int i = 0; i < Enemies.Length; i++) {
+                Enemies[i].SetActive(false);
+                Enemies[i].GetComponent<Enemy>().JustSpawned = true;
+            }
+
+            contr.PlayPhase = true;
             return;
         }
 
         //Levels
-        switch (ui.level) {
+        switch (contr.level) {
 
             case 1:
                 Enemies = new GameObject[6];
@@ -315,21 +312,63 @@ public class GameplayController : MonoBehaviour
                     Enemies[i].GetComponent<Enemy>().JustSpawned = true;
                 }
 
-               
+                break;
 
-              
+            //Use random enemy generation
+            default: 
+                Enemies = new GameObject[contr.RandomEnemies];
+                EnemiesLeft = contr.RandomEnemies;
 
-               
+                for(int i = 0; i < contr.RandomEnemies; i++) {
 
-               
+                    //Random enemy
+                    switch(Random.Range(1,9)) {
+                        
+                        case 1:
+                            Enemies[i] = Instantiate(BasicTank) as GameObject;
+                            break;
+
+                        case 2:
+                            Enemies[i] = Instantiate(AdvancedTank) as GameObject;
+                            break;
+
+                        case 3:
+                            Enemies[i] = Instantiate(BasicAirplane) as GameObject;
+                            break;
+
+                        case 4:
+                            Enemies[i] = Instantiate(AdvancedAirplane) as GameObject;
+                            break;
+
+                        case 5:
+                            Enemies[i] = Instantiate(BasicEnemy) as GameObject;
+                            break;
 
 
+                        case 6:
+                            Enemies[i] = Instantiate(CannonOnlyEnemy) as GameObject;
+                            break;
+
+                        case 7:
+                            Enemies[i] = Instantiate(HeavyEnemy) as GameObject;
+                            break;
+
+                        case 8:
+                            Enemies[i] = Instantiate(WeakFastEnemy) as GameObject;
+                            break;
+
+                    }
+
+                    Enemies[i].SetActive(false);
+                    Enemies[i].GetComponent<Enemy>().JustSpawned = true;
+                }
+                contr.RandomEnemies += 5;
                 break;
 
 
         }
 
-        PlayPhase = true;
+        contr.PlayPhase = true;
     }
 
 

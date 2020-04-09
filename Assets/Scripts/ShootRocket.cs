@@ -11,6 +11,5 @@ public class ShootRocket : MonoBehaviour
     {
 
         Instantiate(Ammo, FirePoint.position, FirePoint.rotation);
-
     }
 }

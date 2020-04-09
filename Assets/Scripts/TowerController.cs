@@ -12,10 +12,9 @@ public class TowerController : MonoBehaviour
 
     private GameObject PlacementMode;
     private Tilemap baseLayer;
-    private int TopTracker;
-    private int BottomTracker;
+    private PersistenceController contr;
 
-    private  Vector3[] TopSpots = {
+    public  Vector3[] OrigTopSpots = {
         new Vector3(-20.59f,-11.75f, -0.7f),
         new Vector3(-20.59f, -8.75f, -0.7f),
         new Vector3(-20.59f, -5.75f, -0.7f),
@@ -33,7 +32,7 @@ public class TowerController : MonoBehaviour
         new Vector3(11.11f, -1.0f, -0.7f)
     };
 
-    private Vector3[] BottomSpots = {
+    public Vector3[] OrigBottomSpots = {
         new Vector3(-12.25f,0.6f,-0.7f),
         new Vector3(-12.25f,-2.4f,-0.7f),
         new Vector3(-12.25f,-5.4f,-0.7f),
@@ -58,25 +57,61 @@ public class TowerController : MonoBehaviour
         new Vector3(22.41f,  3.7f, -0.7f),
     };
 
-    private List<GameObject> TowersActive;
-
     // Start is called before the first frame update
     void Start()
     {
-        //Top and Bottom trackers keep track of the last used tower spot. Any index beyond these trackers is either invalid or is being used.
-        TopTracker = TopSpots.Length;
-        BottomTracker = BottomSpots.Length;
-
-
+        contr = PersistenceController.Instance;
         baseLayer = GameObject.Find("/Grid/BaseMap").GetComponent<Tilemap>();
 
+        if(contr.TopTowersActive.Count != 0) {
+            foreach(KeyValuePair<string, int> tower in contr.TopTowersActive) {
+                SpawnTower(tower.Key.Split('.')[0], OrigTopSpots[tower.Value]);
+            }  
+        }
 
-        TowersActive = new List<GameObject>();
+        if(contr.BottomTowersActive.Count != 0) {
+            foreach(KeyValuePair<string, int> tower in contr.BottomTowersActive) {
+                SpawnTower(tower.Key.Split('.')[0], OrigBottomSpots[tower.Value]); // Splits off the ending tower number to have unique keys
+            }
+        }
+        
     }
 
     void Update()
     {
      
+    }
+
+    private void SpawnTower(string type, Vector3 position) {
+
+
+        if (type == "BasicRocket")
+        {
+            Instantiate(BasicRocket, position, Quaternion.identity);
+        }
+
+        else if (type == "AdvancedRocket")
+        {
+            Instantiate(AdvancedRocket, position, Quaternion.identity);
+
+        }
+
+        else if (type == "BigRocket")
+        {
+            Instantiate(BigRocket, position, Quaternion.identity);
+
+
+        }
+
+        else if (type == "BasicCannon")
+        {
+            Instantiate(BasicCannon, position, Quaternion.identity);
+        }
+
+        else
+        {
+            Instantiate(AdvancedCannon, position, Quaternion.identity);
+        }   
     }
 
     public void PlaceTower(string type, int position)
@@ -89,79 +124,25 @@ public class TowerController : MonoBehaviour
             //Find an unused position
             //TopTracker - 1 gurantees that we will only choose spots in the array that have not been chosen
 
-            int TowerSpot = Mathf.FloorToInt(Random.Range(0.0f, ((float) TopTracker - 1)));
-
-
-            if (type == "BasicRocket")
-            {
-                TowersActive.Add(Instantiate(BasicRocket, TopSpots[TowerSpot], Quaternion.identity));
-            }
-
-            else if (type == "AdvancedRocket")
-            {
-                TowersActive.Add(Instantiate(AdvancedRocket, TopSpots[TowerSpot], Quaternion.identity));
-
-            }
-
-            else if (type == "BigRocket")
-            {
-                TowersActive.Add(Instantiate(BigRocket, TopSpots[TowerSpot], Quaternion.identity));
-
-
-            }
-
-            else if (type == "BasicCannon")
-            {
-                TowersActive.Add(Instantiate(BasicCannon, TopSpots[TowerSpot], Quaternion.identity));
-            }
-
-            else
-            {
-                TowersActive.Add(Instantiate(AdvancedCannon, TopSpots[TowerSpot], Quaternion.identity));
-            }
-            
-             TopTracker--;
-             Vector3 temp = TopSpots[TopTracker];
-             TopSpots[TopTracker] = TopSpots[TowerSpot];
-             TopSpots[TowerSpot] = temp;
-              
-            
+            int TowerSpot = Mathf.FloorToInt(Random.Range(0.0f, ((float) contr.TopTracker - 1)));
+            //type + TowerSpot number so no identical keys
+            SpawnTower(type, contr.TopSpots[TowerSpot]);
+            contr.TopTracker--;
+            Vector3 temp = contr.TopSpots[contr.TopTracker];
+            contr.TopSpots[contr.TopTracker] = contr.TopSpots[TowerSpot];
+            contr.TopSpots[TowerSpot] = temp;
+            contr.TopTowersActive.Add(type + "." + TowerSpot.ToString(), TowerSpot);
         }
 
         else
         {
-            int TowerSpot = Mathf.FloorToInt(Random.Range(0.0f, ((float)BottomTracker - 1)));
-
-            if (type == "BasicRocket")
-            {
-                TowersActive.Add(Instantiate(BasicRocket, BottomSpots[TowerSpot], Quaternion.identity));
-            }
-
-            else if (type == "AdvancedRocket")
-            {
-                TowersActive.Add(Instantiate(AdvancedRocket, BottomSpots[TowerSpot], Quaternion.identity));
-            }
-
-            else if (type == "BigRocket")
-            {
-                TowersActive.Add(Instantiate(BigRocket, BottomSpots[TowerSpot], Quaternion.identity));
-            }
-
-            else if (type == "BasicCannon")
-            {
-                TowersActive.Add(Instantiate(BasicCannon, BottomSpots[TowerSpot], Quaternion.identity));
-            }
-
-            else
-            {
-                TowersActive.Add(Instantiate(AdvancedCannon, BottomSpots[TowerSpot], Quaternion.identity));
-            }
-
-            BottomTracker--;
-            Vector3 temp = BottomSpots[BottomTracker];
-            BottomSpots[BottomTracker] = BottomSpots[TowerSpot];
-            BottomSpots[TowerSpot] = temp;
-
+            int TowerSpot = Mathf.FloorToInt(Random.Range(0.0f, ((float)contr.BottomTracker - 1)));
+            SpawnTower(type, contr.BottomSpots[TowerSpot]);
+            contr.BottomTracker--;
+            Vector3 temp = contr.BottomSpots[contr.BottomTracker];
+            contr.BottomSpots[contr.BottomTracker] = contr.BottomSpots[TowerSpot];
+            contr.BottomSpots[TowerSpot] = temp;
+            contr.BottomTowersActive.Add(type + "." + TowerSpot.ToString(), TowerSpot);
         }
     }
 }

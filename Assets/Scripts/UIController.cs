@@ -9,51 +9,63 @@ using System.CodeDom;
 
 public class UIController : MonoBehaviour
 {
+    //UI Elements
     public Slider HealthBar;
     public Text MoneyText;
     public Button PurchaseButton;
     public Button StartButton;
     public GameObject PurchasePanel;
-    public TowerController Towers;
     public Text SelectTowerText;
     public Dropdown SelectTower;
-    public int Money;
-    public GameplayController game;
-    public int level;
     public Text CurrentLevel;
     public Text GameOverText;
     public GameObject TowersFull;
 
+    // Non-UI Elements 
+    public TowerController Towers;
+    public GameplayController game;
 
+    //Private fields
     private bool PurchaseOpen;
     private bool PlacementMode;
     private string PlacementType;
-    private int TopTurretsPlaced;
-    private int BottomTurretsPlaced;
 
+    private PersistenceController contr;
+    
+
+    //Constants/Reference data
     private const int TOP_SPOTS = 15;
     private const int BOTTOM_SPOTS = 22;
+    private Dictionary<string, int> prices = new Dictionary<string, int> 
+    {
+        {"BasicRocket", 100},
+        {"AdvancedRocket", 250},
+        {"BigRocket", 400},
+        {"BasicCannon", 700},
+        {"AdvancedCannon", 900}
 
-    private Dictionary<string, int> prices;
+
+    };
 
     // Start is called before the first frame update
     void Start()
     {
-        //Price table for towers
-        prices = new Dictionary<string, int>();
-        prices.Add("BasicRocket", 100);
-        prices.Add("AdvancedRocket", 250);
-        prices.Add("BigRocket", 400);
-        prices.Add("BasicCannon", 700);
-        prices.Add("AdvancedCannon", 900);
 
         PurchasePanel.SetActive(false);
         PurchaseOpen = false;
         PlacementMode = false;
         SelectTowerText.gameObject.SetActive(false);
+       
+       //Persistent data
+        contr = PersistenceController.Instance;
+        MoneyText.text = "$" + contr.money;
+        CurrentLevel.text = contr.level.ToString();
+        HealthBar.value = contr.health;
 
-        MoneyText.text = "$" + Money;
-        CurrentLevel.text = level.ToString();
+        if(contr.GameOver) {
+            GameOverText.gameObject.SetActive(true);
+            
+        }
     }
 
     // Update is called once per frame
@@ -72,8 +84,9 @@ public class UIController : MonoBehaviour
 
     public void MainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
-
+        if( (contr.BuyPhase || contr.GameOver) && !PurchaseOpen ) {
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 
     public void BuyingItemPressed(Button button)
@@ -81,8 +94,8 @@ public class UIController : MonoBehaviour
         int price = 0;
         prices.TryGetValue(button.name, out price);
 
-        if (price > Money) {
-            //If user doesnt have enough money, ignore request
+        if (price > contr.money) {
+            //If user doesnt have enough contr.money, ignore request
             return;
         
         }
@@ -91,7 +104,7 @@ public class UIController : MonoBehaviour
         PurchaseOpen = false;
         PurchasePanel.SetActive(false); //Just to hide
 
-        if (TopTurretsPlaced == TOP_SPOTS && SelectTowerText.transform.GetChild(0).gameObject.GetComponent<Dropdown>().options.Count == 2)
+        if (contr.TopTurretsPlaced == TOP_SPOTS && SelectTowerText.transform.GetChild(0).gameObject.GetComponent<Dropdown>().options.Count == 2)
         {
 
             //Remove option of selecting top spots
@@ -100,7 +113,7 @@ public class UIController : MonoBehaviour
 
         }
 
-        else if (BottomTurretsPlaced == BOTTOM_SPOTS && SelectTowerText.transform.GetChild(0).gameObject.GetComponent<Dropdown>().options.Count == 2)
+        else if (contr.BottomTurretsPlaced == BOTTOM_SPOTS && SelectTowerText.transform.GetChild(0).gameObject.GetComponent<Dropdown>().options.Count == 2)
         {
             //Remove option of selecting bottom spots
             SelectTowerText.transform.GetChild(0).gameObject.GetComponent<Dropdown>().options.RemoveAt(1);
@@ -116,7 +129,7 @@ public class UIController : MonoBehaviour
     public void PurchasePressed()
     {
 
-        if (PurchaseOpen || PlacementMode || !(game.BuyPhase))
+        if (PurchaseOpen || PlacementMode || !(contr.BuyPhase))
         {
             // If window is already open, we are trying to place a tower, or we are not in buy phase, just ignore request
             return;
@@ -131,7 +144,7 @@ public class UIController : MonoBehaviour
     }
 
     public void StartPressed() {
-        if (PurchaseOpen || PlacementMode || !(game.BuyPhase))
+        if (PurchaseOpen || PlacementMode || !(contr.BuyPhase))
         {
             // If window is already open, we are trying to place a tower, or we are not in buy phase, just ignore request
             return;
@@ -161,19 +174,19 @@ public class UIController : MonoBehaviour
        PlacementMode = false;
        SelectTowerText.gameObject.SetActive(false);
 
-        if (choice == 0 && TopTurretsPlaced != TOP_SPOTS)
+        if (choice == 0 && contr.TopTurretsPlaced != TOP_SPOTS)
         {
-            TopTurretsPlaced++;
+            contr.TopTurretsPlaced++;
             Towers.PlaceTower(PlacementType,0);
         }
 
         else
         {
-            BottomTurretsPlaced++;
+            contr.BottomTurretsPlaced++;
             Towers.PlaceTower(PlacementType,1);
         }
 
-        if (BottomTurretsPlaced == BOTTOM_SPOTS && TopTurretsPlaced == TOP_SPOTS)
+        if (contr.BottomTurretsPlaced == BOTTOM_SPOTS && contr.TopTurretsPlaced == TOP_SPOTS)
         {
             PurchaseButton.gameObject.SetActive(false);
             TowersFull.SetActive(true);
@@ -196,15 +209,15 @@ public class UIController : MonoBehaviour
 
 
     public void AddMoney(int val) {
-        Money += val;
+        contr.money += val;
 
-        MoneyText.text = "$" + Money;
+        MoneyText.text = "$" + contr.money;
     }
 
 
     public void RemoveMoney(int val) {
-        Money -= val;
-        MoneyText.text = "$" + Money;
+        contr.money -= val;
+        MoneyText.text = "$" + contr.money;
 
     }
 
@@ -212,7 +225,7 @@ public class UIController : MonoBehaviour
         StartButton.gameObject.SetActive(true);
 
         //If there are no more open turret spots, do not show the purchase button
-        if (TopTurretsPlaced != TOP_SPOTS && BottomTurretsPlaced != BOTTOM_SPOTS) { 
+        if (contr.TopTurretsPlaced != TOP_SPOTS && contr.BottomTurretsPlaced != BOTTOM_SPOTS) { 
             PurchaseButton.gameObject.SetActive(true);
             
         }
@@ -221,8 +234,8 @@ public class UIController : MonoBehaviour
     }
 
     public void NextLevel() {
-        level++;
-        CurrentLevel.text = level.ToString();
+        contr.level++;
+        CurrentLevel.text = contr.level.ToString();
     }
 
 

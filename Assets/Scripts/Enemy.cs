@@ -42,12 +42,6 @@ public class Enemy : MonoBehaviour
         //Only register projectile collisions
         if (col.gameObject.tag == "Projectile" || col.gameObject.tag == "Projectile-Double") {
 
-            //If we are hit by a projectile but we are not targeted, it will be ignored unless it is a double missile
-            if (col.gameObject.tag == "Projectile" && !targeted) {
-                return;
-            
-            } 
-
             Destroy(col.gameObject);
             ReduceHealth(col.gameObject.GetComponent<Rocket>().RocketDamage);
         }
