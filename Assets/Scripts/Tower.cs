@@ -8,10 +8,11 @@ public class Tower : MonoBehaviour
     public int turretDamage;
     private bool isShooting;
     private GameObject target;
-
-    public Tower()
+    private AudioManager aud;
+    void Start()
     {
         isShooting = false;
+        aud = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     
     }
 
@@ -96,9 +97,9 @@ public class Tower : MonoBehaviour
         isShooting = true;
 
         if (tag == "Turret") {
-                    
+            
             transform.GetChild(0).gameObject.SetActive(true);
-
+            aud.Play("TurretShot");
             en.ReduceHealth(turretDamage);
 
             yield return new WaitForSeconds(0.5f);
@@ -112,6 +113,7 @@ public class Tower : MonoBehaviour
         
         if (tag == "Missile")
         {
+            aud.Play("RocketShot");
             transform.gameObject.GetComponent<ShootRocket>().Fire();
             yield return new WaitForSeconds(shootSpeed);
 

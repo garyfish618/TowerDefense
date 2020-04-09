@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
 
     private int OriginalHealth;
     private UIController ui;
+    private AudioManager aud;
     private GameplayController game;
     private bool isDead;
 
@@ -30,6 +31,7 @@ public class Enemy : MonoBehaviour
         ui = GameObject.Find("UIController").GetComponent<UIController>();
         game = GameObject.Find("GameplayController").GetComponent<GameplayController>();
         isDead = false;
+        aud = GameObject.Find("AudioManager").GetComponent<AudioManager>();
     }
 
     // Update is called once per frame
@@ -77,6 +79,7 @@ public class Enemy : MonoBehaviour
         transform.GetChild(1).gameObject.GetComponent<Animator>().Play("Explosion");
         yield return new WaitForSeconds(0.5f);
         game.EnemiesLeft--;
+        aud.Play("Explosion");
         Destroy(transform.gameObject);
 
     }

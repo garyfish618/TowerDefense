@@ -402,7 +402,7 @@ MonoBehaviour:
   damage: 0.03
   HealthBar: {fileID: 8454561024794497313}
   SpawnCooldown: 3
-  worth: 15
+  worth: 30
   JustSpawned: 0
   OnWait: 0
   targeted: 0

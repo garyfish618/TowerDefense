@@ -25,6 +25,7 @@ public class PersistenceController : MonoBehaviour
     public int TopTracker;
     public int BottomTracker;
     public bool TestMode;
+    public bool SoundAudible;
     public  Vector3[] TopSpots = {
         new Vector3(-20.59f,-11.75f, -0.7f),
         new Vector3(-20.59f, -8.75f, -0.7f),
@@ -90,6 +91,7 @@ public class PersistenceController : MonoBehaviour
             BottomTracker = BottomSpots.Length - 1;
             TopTowersActive = new Dictionary<string,int>();
             BottomTowersActive = new Dictionary<string,int>();
+            SoundAudible = true;
 
             DontDestroyOnLoad(gameObject); // gameObject = the game object this script lives on
         }

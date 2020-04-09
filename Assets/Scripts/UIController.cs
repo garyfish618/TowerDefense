@@ -17,6 +17,8 @@ public class UIController : MonoBehaviour
     public GameObject PurchasePanel;
     public Text SelectTowerText;
     public Dropdown SelectTower;
+
+    public Text SoundBut;
     public Text CurrentLevel;
     public Text GameOverText;
     public GameObject TowersFull;
@@ -64,8 +66,10 @@ public class UIController : MonoBehaviour
 
         if(contr.GameOver) {
             GameOverText.gameObject.SetActive(true);
-            
+
         }
+
+        ChangeSound(contr.SoundAudible);
     }
 
     // Update is called once per frame
@@ -207,6 +211,26 @@ public class UIController : MonoBehaviour
         PurchasePressed();
     }
 
+    public void SoundPressed()
+    {
+       ChangeSound(!contr.SoundAudible);
+
+    }
+
+    public void ChangeSound(bool NewSoundState)
+    {
+        if(NewSoundState)
+        {
+            contr.SoundAudible = true;
+            SoundBut.text = "Sound OFF";
+            return;
+        }
+
+        contr.SoundAudible = false;
+        SoundBut.text = "Sound ON";
+
+
+    }
 
     public void AddMoney(int val) {
         contr.money += val;
