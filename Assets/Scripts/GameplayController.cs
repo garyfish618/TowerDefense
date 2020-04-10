@@ -14,6 +14,9 @@ public class GameplayController : MonoBehaviour
     public GameObject AdvancedAirplane;
     public UIController ui;
     public int EnemiesLeft;
+
+    public InventoryController inventory;
+
     public GameObject[] Waypoints;
     private GameObject[] Enemies;
     private PersistenceController contr;
@@ -109,8 +112,8 @@ public class GameplayController : MonoBehaviour
                             contr.GameOver = true;
                             ui.GameOver(); 
                         }
-                        contr.health -= enemy.damage;
-                        ui.HealthBar.value = contr.health;
+                        
+                        ui.SetHealth(contr.health - enemy.damage);
                         Destroy(Enemies[i]);
                         Enemies[i] = null;
 
@@ -140,6 +143,22 @@ public class GameplayController : MonoBehaviour
 
     }
 
+    public void DestroyAllEnemies() {
+        contr.PlayPhase = false;
+
+        foreach(GameObject enemy in Enemies) {
+            if(enemy == null) {
+                continue;
+            }
+            Destroy(enemy);
+        }
+        EnemiesLeft = 0;
+        contr.PlayPhase = false;
+        contr.BuyPhase = true;
+        ui.NextLevel();
+        ui.EnterBuyPhase();
+    }
+
     public void StartGame() {
         //Only if we are in Buy Phase can we move to Play phase. If the game is over, simply ignore request to start next level
         if (contr.BuyPhase == true) {
@@ -151,6 +170,15 @@ public class GameplayController : MonoBehaviour
         return;
 
     
+    }
+
+    public void GiveAward(string name) {
+        if(contr.GameOver) {
+            return;
+        }
+
+        inventory.AddItem(name);
+        ui.ItemReceived(name);
     }
 
     IEnumerator WaitForSpawn(Enemy en)

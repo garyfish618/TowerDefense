@@ -19,6 +19,7 @@ public class PersistenceController : MonoBehaviour
     public int TopTurretsPlaced;
     public int BottomTurretsPlaced;
     public float health;
+    public Dictionary<string, int> Inventory;
     public Dictionary<string, int> TopTowersActive;
     public Dictionary<string, int> BottomTowersActive;
     //Top and Bottom trackers keep track of the last used tower spot. Any index beyond these trackers is either invalid or is being used.
@@ -69,6 +70,8 @@ public class PersistenceController : MonoBehaviour
         new Vector3(22.41f,  3.7f, -0.7f),
     };
 
+    
+
 
 
 
@@ -92,6 +95,12 @@ public class PersistenceController : MonoBehaviour
             TopTowersActive = new Dictionary<string,int>();
             BottomTowersActive = new Dictionary<string,int>();
             SoundAudible = true;
+            Inventory = new Dictionary<string,int>() {
+                {"TownFull", 0},
+                {"TownHalf", 0},
+                {"TownQuarter", 0},
+                {"DestroyEnemies", 0}
+            };
 
             DontDestroyOnLoad(gameObject); // gameObject = the game object this script lives on
         }

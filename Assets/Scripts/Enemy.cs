@@ -56,22 +56,59 @@ public class Enemy : MonoBehaviour
     public void ReduceHealth(int dmg) {
 
         if (health - dmg <= 0 && !isDead) {
-            ui.AddMoney(worth);
-            isDead = true;
+            
+            RemoveEnemy();
+            //Chances for power up's
+            int chance = Random.Range(1,11); 
 
-            if (transform.GetChild(1).gameObject.tag == "Explosive") {
-                StartCoroutine(Explode());
+            //20% chance for full town repair
+            if (chance <= 2) {
+                
+                game.GiveAward("TownFull");
                 return;
-
             }
-            game.EnemiesLeft--;
-            Destroy(transform.gameObject);
+
+            //25% chance for half town repair
+            chance = Random.Range(1,5);
+            if (chance == 1) {
+                game.GiveAward("TownHalf");
+                return;
+            }
+
+            //20% chance for destroy all enemies
+            chance = Random.Range(1,11);
+            if (chance <= 2) {
+                game.GiveAward("DestroyEnemies");
+            }
+
+            //30% chance for quarter town repair
+            chance = Random.Range(1, 11);
+            if(chance <= 3) {
+                game.GiveAward("TownQuarter");
+                return;
+            }
+
+            return;
         }
 
         health -= dmg;
         //Set the visual health bar
         float newHealth = (float)health / (float)OriginalHealth;
         HealthBar.value = newHealth;
+    }
+
+    public void RemoveEnemy() {
+        ui.AddMoney(worth);
+        isDead = true;
+
+        if (transform.GetChild(1).gameObject.tag == "Explosive") {
+                StartCoroutine(Explode());
+                return;
+        }
+        
+        game.EnemiesLeft--;
+        Destroy(transform.gameObject);
+        
     }
 
 
@@ -81,7 +118,6 @@ public class Enemy : MonoBehaviour
         game.EnemiesLeft--;
         aud.Play("Explosion");
         Destroy(transform.gameObject);
-
     }
 
 }

@@ -21,16 +21,27 @@ public class UIController : MonoBehaviour
     public Text SoundBut;
     public Text CurrentLevel;
     public Text GameOverText;
+    public Text DestroyItem;
+    public Text TownFullItem;
+    public Text TownHalfItem;
+    public Text TownQuarterItem;
     public GameObject TowersFull;
+    public GameObject Inventory;
+    public GameObject RoundSummary;
+    public InputField RoundText;
 
     // Non-UI Elements 
     public TowerController Towers;
     public GameplayController game;
+    public InventoryController inv;
 
     //Private fields
     private bool PurchaseOpen;
     private bool PlacementMode;
+    private bool RoundSummaryOpen;
     private string PlacementType;
+
+    private Dictionary<string,int> awards;
 
     private PersistenceController contr;
     
@@ -53,6 +64,8 @@ public class UIController : MonoBehaviour
     void Start()
     {
 
+        awards = new Dictionary<string, int>();
+
         PurchasePanel.SetActive(false);
         PurchaseOpen = false;
         PlacementMode = false;
@@ -69,6 +82,12 @@ public class UIController : MonoBehaviour
 
         }
 
+        foreach(KeyValuePair<string,int> item in contr.Inventory) {
+            for(int i = 1; i <= item.Value; i++){
+                UpdateItem(item.Key);
+            }
+        }
+
         ChangeSound(contr.SoundAudible);
     }
 
@@ -81,9 +100,20 @@ public class UIController : MonoBehaviour
 
     public void GameOver() 
     {
+        Inventory.SetActive(false);
         GameOverText.gameObject.SetActive(true);
     
     
+    }
+
+    public void InventoryPressed()
+    {
+        if(Inventory.activeSelf) {
+            Inventory.SetActive(false);
+            return;
+        }
+
+        Inventory.SetActive(true);
     }
 
     public void MainMenu()
@@ -91,6 +121,10 @@ public class UIController : MonoBehaviour
         if( (contr.BuyPhase || contr.GameOver) && !PurchaseOpen ) {
             SceneManager.LoadScene("MainMenu");
         }
+    }
+
+    public void ItemPressed(Button but) {
+        inv.UseItem(but.name);
     }
 
     public void BuyingItemPressed(Button button)
@@ -130,10 +164,16 @@ public class UIController : MonoBehaviour
 
     }
 
+    public void CloseRoundPressed()
+    {
+        RoundSummary.SetActive(false);
+        RoundSummaryOpen = false;
+    }
+
     public void PurchasePressed()
     {
 
-        if (PurchaseOpen || PlacementMode || !(contr.BuyPhase))
+        if (RoundSummaryOpen || PurchaseOpen || PlacementMode || !(contr.BuyPhase))
         {
             // If window is already open, we are trying to place a tower, or we are not in buy phase, just ignore request
             return;
@@ -254,12 +294,75 @@ public class UIController : MonoBehaviour
             
         }
 
+        RoundSummaryOpen = true;
+        RoundSummary.SetActive(true);
 
+        string RoundSum = "";
+
+        if(awards.ContainsKey("TownFull")) {
+            RoundSum += "Full Town Repair: " + awards["TownFull"] + "x\n";
+        }
+
+        if(awards.ContainsKey("TownHalf")) {
+            RoundSum += "Half Town Repair: " + awards["TownHalf"] + "x\n";
+        }
+
+        if(awards.ContainsKey("TownQuarter")) {
+            RoundSum += "Quarter Town Repair: " + awards["TownQuarter"] + "x\n";
+        }
+        
+        if(awards.ContainsKey("DestroyEnemies")) {
+            RoundSum += "Destroy all enemies: " + awards["DestroyEnemies"] + "x\n";
+        }
+
+        RoundText.text = RoundSum;
+        //Reset awards
+        awards = new Dictionary<string,int>();
+    }
+
+    //Queue up the items received from active round to show at end
+    public void ItemReceived(string name) {
+        if(awards.ContainsKey(name)) {
+            awards[name]++;
+        }
+
+        else {
+            awards.Add(name, 1);
+        }
+    }
+
+    public void SetHealth(float health) {
+
+        if(health + contr.health > 1) {
+            contr.health = 1.0f;
+        }
+        contr.health = health;
+        HealthBar.value = contr.health;
     }
 
     public void NextLevel() {
         contr.level++;
         CurrentLevel.text = contr.level.ToString();
+    }
+
+    public void UpdateItem(string name) {
+        
+        if(name == "DestroyEnemies") {
+            DestroyItem.text = "Destroy all Enemies - " + contr.Inventory["DestroyEnemies"] + "x"; 
+        }
+
+        if(name == "TownFull") {
+            TownFullItem.text = "Town Repair (Full) - " + contr.Inventory["TownFull"] + "x";
+        }
+
+        if(name == "TownHalf") {
+            TownHalfItem.text = "Town Repair (Half) - " + contr.Inventory["TownHalf"] + "x"; 
+        }
+
+        if(name == "TownQuarter") {
+            TownQuarterItem.text = "Town Repair (Quarter) - " + contr.Inventory["TownQuarter"] + "x";
+        }
+
     }
 
 

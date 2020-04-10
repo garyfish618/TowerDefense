@@ -9,11 +9,12 @@ public class Tower : MonoBehaviour
     private bool isShooting;
     private GameObject target;
     private AudioManager aud;
+    private PersistenceController contr;
     void Start()
     {
         isShooting = false;
         aud = GameObject.Find("AudioManager").GetComponent<AudioManager>();
-    
+        contr = PersistenceController.Instance;
     }
 
 
@@ -91,6 +92,7 @@ public class Tower : MonoBehaviour
     {
         if (isShooting)
         {
+            Debug.Log("Is shooting");
             yield break;
         }
 
