@@ -16,6 +16,11 @@ public class MenuController : MonoBehaviour
         SceneManager.LoadScene("MainGame");
     }
 
+    public void ShowHelp()
+    {
+        Application.OpenURL("https://rijeka.sdsu.edu/Gfishell/cs583s2020_fishell_gary_proj_02/-/wikis/How-to-Play");
+    }
+
     public void QuitGame()
     {
         #if UNITY_EDITOR

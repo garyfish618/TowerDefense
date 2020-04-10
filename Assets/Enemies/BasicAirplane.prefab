@@ -253,7 +253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0.03
-  health: 50
+  health: 100
   CurrentWayPoint: 0
   damage: 0.1
   HealthBar: {fileID: 3679910439167908050}

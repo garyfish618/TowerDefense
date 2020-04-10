@@ -36,11 +36,15 @@ public class InventoryController : MonoBehaviour
     public void UseItem(string name)  {
         float healthIncr = 0;
 
+        if(contr.GameOver) {
+            return;
+        }
+
         if(!contr.Inventory.ContainsKey(name) || contr.Inventory[name] == 0 ) {
             return;
         }
 
-        if(name == "DestroyEnemies") {
+        if(name == "DestroyEnemies" && contr.PlayPhase) {
             game.DestroyAllEnemies();
             RemoveItem(name);
             return;

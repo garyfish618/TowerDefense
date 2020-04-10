@@ -59,31 +59,31 @@ public class Enemy : MonoBehaviour
             
             RemoveEnemy();
             //Chances for power up's
-            int chance = Random.Range(1,11); 
+            int chance = Random.Range(1,21); 
 
-            //20% chance for full town repair
-            if (chance <= 2) {
+            //5% chance for full town repair
+            if (chance == 1) {
                 
                 game.GiveAward("TownFull");
                 return;
             }
 
-            //25% chance for half town repair
-            chance = Random.Range(1,5);
+            //10% chance for half town repair
+            chance = Random.Range(1,11);
             if (chance == 1) {
                 game.GiveAward("TownHalf");
                 return;
             }
 
-            //20% chance for destroy all enemies
-            chance = Random.Range(1,11);
-            if (chance <= 2) {
+            //5% chance for destroy all enemies
+            chance = Random.Range(1,21);
+            if (chance == 1) {
                 game.GiveAward("DestroyEnemies");
             }
 
-            //30% chance for quarter town repair
+            //10% chance for quarter town repair
             chance = Random.Range(1, 11);
-            if(chance <= 3) {
+            if(chance == 1) {
                 game.GiveAward("TownQuarter");
                 return;
             }

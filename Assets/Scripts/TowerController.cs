@@ -79,7 +79,12 @@ public class TowerController : MonoBehaviour
 
     void Update()
     {
-     
+        if(contr.GameOver) {
+            foreach(GameObject obj in contr.Towers) {
+                Destroy(obj);
+            }
+        }
+
     }
 
     private void SpawnTower(string type, Vector3 position) {
@@ -87,31 +92,33 @@ public class TowerController : MonoBehaviour
 
         if (type == "BasicRocket")
         {
-            Instantiate(BasicRocket, position, Quaternion.identity);
+            contr.Towers[contr.TowerCount] = Instantiate(BasicRocket, position, Quaternion.identity);
         }
 
         else if (type == "AdvancedRocket")
         {
-            Instantiate(AdvancedRocket, position, Quaternion.identity);
+            contr.Towers[contr.TowerCount] = Instantiate(AdvancedRocket, position, Quaternion.identity);
 
         }
 
         else if (type == "BigRocket")
         {
-            Instantiate(BigRocket, position, Quaternion.identity);
+            contr.Towers[contr.TowerCount] = Instantiate(BigRocket, position, Quaternion.identity);
 
 
         }
 
         else if (type == "BasicCannon")
         {
-            Instantiate(BasicCannon, position, Quaternion.identity);
+            contr.Towers[contr.TowerCount] = Instantiate(BasicCannon, position, Quaternion.identity);
         }
 
         else
         {
-            Instantiate(AdvancedCannon, position, Quaternion.identity);
-        }   
+            contr.Towers[contr.TowerCount] = Instantiate(AdvancedCannon, position, Quaternion.identity);
+        }
+
+        contr.TowerCount++;
     }
 
     public void PlaceTower(string type, int position)

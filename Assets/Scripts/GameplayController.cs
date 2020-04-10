@@ -20,6 +20,7 @@ public class GameplayController : MonoBehaviour
     public GameObject[] Waypoints;
     private GameObject[] Enemies;
     private PersistenceController contr;
+    private bool DefaultSpawnTime;
 
 
     void Start() {
@@ -107,10 +108,16 @@ public class GameplayController : MonoBehaviour
                 {
                     if (Enemies[i].GetComponent<Enemy>().CurrentWayPoint == Waypoints.Length - 1)
                     {
-                        if (ui.HealthBar.value - enemy.damage <= 0) {
+                        if (ui.HealthBar.value - enemy.damage <= 0) { 
+                            contr.health = 0;
+                            ui.SetHealth(contr.health);
                             contr.PlayPhase = false;
                             contr.GameOver = true;
+                            DestroyAllEnemies();
+                            Enemies = null;
+                            EnemiesLeft = 0;
                             ui.GameOver(); 
+                            return;
                         }
                         
                         ui.SetHealth(contr.health - enemy.damage);
@@ -183,6 +190,12 @@ public class GameplayController : MonoBehaviour
 
     IEnumerator WaitForSpawn(Enemy en)
     {
+        if(DefaultSpawnTime) {
+            yield return new WaitForSeconds(1);
+            en.OnWait = false;
+            en.JustSpawned = false;
+        }
+        
         yield return new WaitForSeconds(en.SpawnCooldown); // Wait some time and then clear enemy for movement
         en.OnWait = false;
         en.JustSpawned = false;
@@ -260,7 +273,7 @@ public class GameplayController : MonoBehaviour
 
             case 3:
                 Enemies = new GameObject[12];
-                EnemiesLeft = 12;
+                EnemiesLeft = 11;
 
                 for (int i = 0; i < 6; i++)
                 {
@@ -280,18 +293,15 @@ public class GameplayController : MonoBehaviour
                 Enemies[9].SetActive(false);
                 Enemies[9].GetComponent<Enemy>().JustSpawned = true;
 
-                for (int i = 10; i < 12; i++)
-                {
-                    Enemies[i] = Instantiate(BasicTank) as GameObject;
-                    Enemies[i].SetActive(false);
-                    Enemies[i].GetComponent<Enemy>().JustSpawned = true;
-                }
+                Enemies[10] = Instantiate(BasicTank) as GameObject;
+                Enemies[10].SetActive(false);
+                Enemies[10].GetComponent<Enemy>().JustSpawned = true;
 
                 break;
 
             case 4:
                 Enemies = new GameObject[18];
-                EnemiesLeft = 18;
+                EnemiesLeft = 17;
 
                 Enemies[0] = Instantiate(WeakFastEnemy) as GameObject;
                 Enemies[0].SetActive(false);
@@ -309,21 +319,16 @@ public class GameplayController : MonoBehaviour
 
                 }
 
-                for (int i = 5; i < 7; i++)
-                {
-                    Enemies[i] = Instantiate(AdvancedTank) as GameObject;
-                    Enemies[i].SetActive(false);
-                    Enemies[i].GetComponent<Enemy>().JustSpawned = true;
-                }
+                Enemies[5] = Instantiate(AdvancedTank) as GameObject;
+                Enemies[5].SetActive(false);
+                Enemies[5].GetComponent<Enemy>().JustSpawned = true;
 
-                for (int i = 7; i < 13; i++)
+                for (int i = 6; i < 13; i++)
                 {
                     Enemies[i] = Instantiate(BasicEnemy) as GameObject;
                     Enemies[i].SetActive(false);
                     Enemies[i].GetComponent<Enemy>().JustSpawned = true;
                 }
-
-               
 
                 for (int i = 13; i < 16; i++)
                 {
@@ -332,18 +337,16 @@ public class GameplayController : MonoBehaviour
                     Enemies[i].GetComponent<Enemy>().JustSpawned = true;
                 }
 
-        
-                for (int i = 16; i < 18; i++)
-                {
-                    Enemies[i] = Instantiate(BasicTank) as GameObject;
-                    Enemies[i].SetActive(false);
-                    Enemies[i].GetComponent<Enemy>().JustSpawned = true;
-                }
+
+                Enemies[16] = Instantiate(BasicTank) as GameObject;
+                Enemies[16].SetActive(false);
+                Enemies[16].GetComponent<Enemy>().JustSpawned = true;
 
                 break;
 
             //Use random enemy generation
-            default: 
+            default:
+                DefaultSpawnTime = true;
                 Enemies = new GameObject[contr.RandomEnemies];
                 EnemiesLeft = contr.RandomEnemies;
 

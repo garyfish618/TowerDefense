@@ -27,6 +27,9 @@ public class PersistenceController : MonoBehaviour
     public int BottomTracker;
     public bool TestMode;
     public bool SoundAudible;
+
+    public GameObject[] Towers;
+    public int TowerCount;
     public  Vector3[] TopSpots = {
         new Vector3(-20.59f,-11.75f, -0.7f),
         new Vector3(-20.59f, -8.75f, -0.7f),
@@ -70,17 +73,25 @@ public class PersistenceController : MonoBehaviour
         new Vector3(22.41f,  3.7f, -0.7f),
     };
 
-    
-
-
-
 
 
     private void Awake()
     {
         if (Instance == null)
         {
-            Instance = this; // Set to the instance that is being created
+            StartGame();
+            DontDestroyOnLoad(gameObject); // gameObject = the game object this script lives on
+        }
+
+        else //Gives singleton property. stops unity from trying to duplicate and create more instances
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
+    public void StartGame() {
+         Instance = this; // Set to the instance that is being created
             BuyPhase = true;
             PlayPhase = false;
             GameOver = false;
@@ -88,7 +99,7 @@ public class PersistenceController : MonoBehaviour
             TopTurretsPlaced=0;
             BottomTurretsPlaced=0;
             level = 1;
-            money=1000;
+            money=700;
             health=1.0f;
             TopTracker = TopSpots.Length - 1;
             BottomTracker = BottomSpots.Length - 1;
@@ -102,12 +113,9 @@ public class PersistenceController : MonoBehaviour
                 {"DestroyEnemies", 0}
             };
 
-            DontDestroyOnLoad(gameObject); // gameObject = the game object this script lives on
-        }
+            Towers = new GameObject[37];
+            TowerCount = 0;
 
-        else //Gives singleton property. stops unity from trying to duplicate and create more instances
-        {
-            Destroy(gameObject);
-        }
+
     }
 }

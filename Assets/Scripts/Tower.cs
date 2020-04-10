@@ -90,9 +90,12 @@ public class Tower : MonoBehaviour
 
     IEnumerator ShootEnemy(string tag, Enemy en)
     {
+        if(contr.GameOver) {
+            yield break;
+        }
+
         if (isShooting)
         {
-            Debug.Log("Is shooting");
             yield break;
         }
 

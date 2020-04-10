@@ -102,8 +102,21 @@ public class UIController : MonoBehaviour
     {
         Inventory.SetActive(false);
         GameOverText.gameObject.SetActive(true);
-    
-    
+    }
+
+    public void RestartPressed()
+    {
+        contr.StartGame();
+        UpdateItem("DestroyEnemies");
+        UpdateItem("TownFull");
+        UpdateItem("TownHalf");
+        UpdateItem("TownQuarter");
+
+        CurrentLevel.text = contr.level.ToString();
+        SetHealth(contr.health);
+        MoneyText.text = "$" + contr.money.ToString();
+        
+        GameOverText.gameObject.SetActive(false);
     }
 
     public void InventoryPressed()

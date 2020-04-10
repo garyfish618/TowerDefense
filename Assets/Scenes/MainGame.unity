@@ -2024,7 +2024,7 @@ RectTransform:
   m_Children:
   - {fileID: 1071012179}
   m_Father: {fileID: 1663547349}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -13167,8 +13167,8 @@ RectTransform:
   - {fileID: 1652918898}
   - {fileID: 24249302}
   - {fileID: 1235038870}
-  - {fileID: 1845119526}
   - {fileID: 551492959}
+  - {fileID: 1845119526}
   - {fileID: 294315103}
   - {fileID: 379174916}
   - {fileID: 1892237105}
@@ -14057,7 +14057,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1663547349}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -15044,7 +15044,7 @@ GameObject:
   - component: {fileID: 2069298581}
   - component: {fileID: 2069298580}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Restart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15112,7 +15112,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2069298581}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 982142598}
+        m_MethodName: RestartPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2069298581
 MonoBehaviour:
   m_ObjectHideFlags: 0
