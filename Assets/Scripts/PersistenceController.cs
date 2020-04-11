@@ -16,20 +16,22 @@ public class PersistenceController : MonoBehaviour
     public int RandomEnemies;
     public int level;
     public int money;
+    public int BasicCannonsPlaced;
+    public int AdvancedCannonsPlaced;
     public int TopTurretsPlaced;
     public int BottomTurretsPlaced;
     public float health;
     public Dictionary<string, int> Inventory;
     public Dictionary<string, int> TopTowersActive;
     public Dictionary<string, int> BottomTowersActive;
-    //Top and Bottom trackers keep track of the last used tower spot. Any index beyond these trackers is either invalid or is being used.
-    public int TopTracker;
-    public int BottomTracker;
     public bool TestMode;
     public bool SoundAudible;
 
+    public bool[] TopSpotsTaken;
+    public bool[] BottomSpotsTaken;
     public GameObject[] Towers;
     public int TowerCount;
+
     public  Vector3[] TopSpots = {
         new Vector3(-20.59f,-11.75f, -0.7f),
         new Vector3(-20.59f, -8.75f, -0.7f),
@@ -91,31 +93,40 @@ public class PersistenceController : MonoBehaviour
 
 
     public void StartGame() {
-         Instance = this; // Set to the instance that is being created
-            BuyPhase = true;
-            PlayPhase = false;
-            GameOver = false;
-            RandomEnemies=20;
-            TopTurretsPlaced=0;
-            BottomTurretsPlaced=0;
-            level = 1;
-            money=700;
-            health=1.0f;
-            TopTracker = TopSpots.Length - 1;
-            BottomTracker = BottomSpots.Length - 1;
-            TopTowersActive = new Dictionary<string,int>();
-            BottomTowersActive = new Dictionary<string,int>();
-            SoundAudible = true;
-            Inventory = new Dictionary<string,int>() {
-                {"TownFull", 0},
-                {"TownHalf", 0},
-                {"TownQuarter", 0},
-                {"DestroyEnemies", 0}
-            };
+        Instance = this; // Set to the instance that is being created
+        BuyPhase = true;
+        PlayPhase = false;
+        GameOver = false;
+        RandomEnemies=20;
+        TopTurretsPlaced=0;
+        BottomTurretsPlaced=0;
+        BasicCannonsPlaced=0;
+        AdvancedCannonsPlaced=0;
+        level = 1;
+        money=1500;
+        health=1.0f;
+        TopTowersActive = new Dictionary<string,int>();
+        BottomTowersActive = new Dictionary<string,int>();
+        TopSpotsTaken = new bool[TopSpots.Length];
+        BottomSpotsTaken = new bool[BottomSpots.Length];
+        SoundAudible = true;
+        Inventory = new Dictionary<string,int>() {
+            {"TownFull", 0},
+            {"TownHalf", 0},
+            {"TownQuarter", 0},
+            {"DestroyEnemies", 0}
+        };
 
-            Towers = new GameObject[37];
-            TowerCount = 0;
+        Towers = new GameObject[37];
+        TowerCount = 0;
 
+        for(int i = 0; i < TopSpotsTaken.Length; i++) {
+            TopSpotsTaken[i] = false;
+        }
+
+        for(int i = 0; i < BottomSpotsTaken.Length; i++) {
+            BottomSpotsTaken[i] = false;
+        }
 
     }
 }

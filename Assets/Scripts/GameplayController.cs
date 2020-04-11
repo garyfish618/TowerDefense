@@ -20,7 +20,6 @@ public class GameplayController : MonoBehaviour
     public GameObject[] Waypoints;
     private GameObject[] Enemies;
     private PersistenceController contr;
-    private bool DefaultSpawnTime;
 
 
     void Start() {
@@ -28,7 +27,7 @@ public class GameplayController : MonoBehaviour
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (EnemiesLeft != 0 && contr.PlayPhase)
         {
@@ -106,7 +105,7 @@ public class GameplayController : MonoBehaviour
 
                 else
                 {
-                    if (Enemies[i].GetComponent<Enemy>().CurrentWayPoint == Waypoints.Length - 1)
+                    if (Enemies[i].GetComponent<Enemy>().CurrentWayPoint == Waypoints.Length - 1 && Enemies[i].GetComponent<Enemy>().health > 0)
                     {
                         if (ui.HealthBar.value - enemy.damage <= 0) { 
                             contr.health = 0;
@@ -143,8 +142,49 @@ public class GameplayController : MonoBehaviour
             contr.PlayPhase = false;
             contr.BuyPhase = true;
 
+            //Chances for power up's
+            int chance = Random.Range(1,51); 
+
+            //2% chance for full town repair
+            if (chance == 1) {
+                
+                GiveAward("TownFull");
+                ui.NextLevel();
+                ui.EnterBuyPhase();
+                return;
+            }
+
+            //10% chance for half town repair
+            chance = Random.Range(1,11);
+            if (chance == 1) {
+                GiveAward("TownHalf");
+                ui.NextLevel();
+                ui.EnterBuyPhase();
+                return;
+            }
+
+            //2% chance for destroy all enemies
+            chance = Random.Range(1,51);
+            if (chance == 1) {
+                GiveAward("DestroyEnemies");
+                ui.NextLevel();
+                ui.EnterBuyPhase();
+                return;
+            }
+
+            //40% chance for quarter town repair
+            chance = Random.Range(1, 11);
+            if(chance <= 4) {
+                GiveAward("TownQuarter");
+                ui.NextLevel();
+                ui.EnterBuyPhase();
+                return;
+            }
+
             ui.NextLevel();
             ui.EnterBuyPhase();
+
+            
         
         }
 
@@ -190,12 +230,19 @@ public class GameplayController : MonoBehaviour
 
     IEnumerator WaitForSpawn(Enemy en)
     {
-        if(DefaultSpawnTime) {
+        if(contr.level >= 15) {
+            yield return new WaitForSeconds(0.5f);
+            en.OnWait = false;
+            en.JustSpawned = false;
+            
+        }
+
+        if(contr.level >= 5) {
             yield return new WaitForSeconds(1);
             en.OnWait = false;
             en.JustSpawned = false;
         }
-        
+             
         yield return new WaitForSeconds(en.SpawnCooldown); // Wait some time and then clear enemy for movement
         en.OnWait = false;
         en.JustSpawned = false;
@@ -346,7 +393,6 @@ public class GameplayController : MonoBehaviour
 
             //Use random enemy generation
             default:
-                DefaultSpawnTime = true;
                 Enemies = new GameObject[contr.RandomEnemies];
                 EnemiesLeft = contr.RandomEnemies;
 

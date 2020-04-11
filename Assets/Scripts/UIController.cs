@@ -28,6 +28,9 @@ public class UIController : MonoBehaviour
     public GameObject TowersFull;
     public GameObject Inventory;
     public GameObject RoundSummary;
+    public GameObject NoMoney;
+    public GameObject NoMoreBasic;
+    public GameObject NoMoreAdvanced;
     public InputField RoundText;
 
     // Non-UI Elements 
@@ -55,7 +58,7 @@ public class UIController : MonoBehaviour
         {"AdvancedRocket", 250},
         {"BigRocket", 400},
         {"BasicCannon", 700},
-        {"AdvancedCannon", 900}
+        {"AdvancedCannon", 2000}
 
 
     };
@@ -77,9 +80,18 @@ public class UIController : MonoBehaviour
         CurrentLevel.text = contr.level.ToString();
         HealthBar.value = contr.health;
 
+        if(contr.BasicCannonsPlaced == 4) {
+               NoMoreBasic.SetActive(true);
+               PurchasePanel.transform.GetChild(3).gameObject.SetActive(false);
+           }
+
+        if(contr.AdvancedCannonsPlaced == 3) {
+               NoMoreAdvanced.SetActive(true);
+               PurchasePanel.transform.GetChild(4).gameObject.SetActive(false);
+           }
+
         if(contr.GameOver) {
             GameOverText.gameObject.SetActive(true);
-
         }
 
         foreach(KeyValuePair<string,int> item in contr.Inventory) {
@@ -146,7 +158,7 @@ public class UIController : MonoBehaviour
         prices.TryGetValue(button.name, out price);
 
         if (price > contr.money) {
-            //If user doesnt have enough contr.money, ignore request
+            StartCoroutine(NotEnoughMoney());
             return;
         
         }
@@ -174,6 +186,14 @@ public class UIController : MonoBehaviour
         SelectTowerText.gameObject.SetActive(true);
         PlacementType = button.name;
 
+
+    }
+
+    IEnumerator NotEnoughMoney() {
+        NoMoney.SetActive(true);
+        yield return new WaitForSeconds(2);
+
+        NoMoney.SetActive(false);
 
     }
 
@@ -231,6 +251,27 @@ public class UIController : MonoBehaviour
        PlacementMode = false;
        SelectTowerText.gameObject.SetActive(false);
 
+        
+       if(PlacementType == "BasicCannon") {
+           contr.BasicCannonsPlaced++;
+           
+           //If 5 basic cannons have been placed, disable placing more
+           if(contr.BasicCannonsPlaced == 4) {
+               NoMoreBasic.SetActive(true);
+               PurchasePanel.transform.GetChild(3).gameObject.SetActive(false);
+           }
+       }
+
+       if(PlacementType == "AdvancedCannon") {
+           contr.AdvancedCannonsPlaced++;
+           
+           //If 5 basic cannons have been placed, disable placing more
+           if(contr.AdvancedCannonsPlaced == 3) {
+               NoMoreAdvanced.SetActive(true);
+               PurchasePanel.transform.GetChild(4).gameObject.SetActive(false);
+           }
+       }
+
         if (choice == 0 && contr.TopTurretsPlaced != TOP_SPOTS)
         {
             contr.TopTurretsPlaced++;
@@ -275,12 +316,12 @@ public class UIController : MonoBehaviour
         if(NewSoundState)
         {
             contr.SoundAudible = true;
-            SoundBut.text = "Sound OFF";
+            SoundBut.text = "Sound ON";
             return;
         }
 
         contr.SoundAudible = false;
-        SoundBut.text = "Sound ON";
+        SoundBut.text = "Sound OFF";
 
 
     }
@@ -326,6 +367,11 @@ public class UIController : MonoBehaviour
         
         if(awards.ContainsKey("DestroyEnemies")) {
             RoundSum += "Destroy all enemies: " + awards["DestroyEnemies"] + "x\n";
+        }
+
+        if(RoundSum.Equals(""))
+        {
+            RoundSum = "No items received!";
         }
 
         RoundText.text = RoundSum;

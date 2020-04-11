@@ -46,13 +46,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf467e5d72aa274f81e6490ae9c139b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.025
+  speed: 0.05
   health: 50
   CurrentWayPoint: 0
   damage: 0.15
   HealthBar: {fileID: 4431681151331494195}
   SpawnCooldown: 1
-  worth: 65
+  worth: 20
   JustSpawned: 0
   OnWait: 0
   targeted: 0

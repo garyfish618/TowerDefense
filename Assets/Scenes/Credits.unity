@@ -225,8 +225,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -80.799995, y: 27.05}
-  m_SizeDelta: {x: 161.6, y: 210.7}
+  m_AnchoredPosition: {x: -80.799995, y: -25.72}
+  m_SizeDelta: {x: 161.6, y: 316.24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &944933012
 MonoBehaviour:
@@ -268,7 +268,11 @@ MonoBehaviour:
     Animations
 
 
-    Art '
+    Art
+
+
+
+    Sound'
 --- !u!222 &944933013
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -464,8 +468,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 155, y: 10.5}
-  m_SizeDelta: {x: 161.6, y: 243.8}
+  m_AnchoredPosition: {x: 283.69995, y: -14.7}
+  m_SizeDelta: {x: 419, y: 294.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1337890931
 MonoBehaviour:
@@ -509,7 +513,13 @@ MonoBehaviour:
 
     Kenney
 
-    Gary Fishell'
+    Gary Fishell
+
+
+    Gary Fishell
+
+
+    Brackeys for his youtube tutorials'
 --- !u!222 &1337890932
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -677,7 +687,7 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 43
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 2
     m_MaxSize: 43
     m_Alignment: 4

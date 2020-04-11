@@ -270,13 +270,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baf467e5d72aa274f81e6490ae9c139b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.06
-  health: 200
+  speed: 0.12
+  health: 125
   CurrentWayPoint: 0
   damage: 0.2
   HealthBar: {fileID: 7912187620150390371}
   SpawnCooldown: 3
-  worth: 160
+  worth: 50
   JustSpawned: 0
   OnWait: 0
   targeted: 0
@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 7778598776933322189}
   m_Layer: 0
   m_Name: explosion
-  m_TagString: Untagged
+  m_TagString: Explosive
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
