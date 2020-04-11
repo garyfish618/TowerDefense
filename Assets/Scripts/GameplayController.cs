@@ -397,7 +397,6 @@ public class GameplayController : MonoBehaviour
                 EnemiesLeft = contr.RandomEnemies;
 
                 for(int i = 0; i < contr.RandomEnemies; i++) {
-
                     //Random enemy
                     switch(Random.Range(1,9)) {
                         
@@ -435,10 +434,34 @@ public class GameplayController : MonoBehaviour
                             break;
 
                     }
-
                     Enemies[i].SetActive(false);
                     Enemies[i].GetComponent<Enemy>().JustSpawned = true;
                 }
+
+                //Difficulty scaling
+                int HealthMultiplier = 1;
+                float SpeedMultiplier = 1.0f;
+                float MoneyMultiplier = 1.0f;
+                
+                if(contr.level >= 15) {
+                    HealthMultiplier = 2;
+                    SpeedMultiplier = 2.0f;
+                    MoneyMultiplier = 0.5f;
+                }
+                
+                if(contr.level >= 20) {
+                    HealthMultiplier = 3;
+                    SpeedMultiplier = 2.5f;
+                    MoneyMultiplier = 0.25f;
+                }
+
+                for(int i = 0; i < Enemies.Length; i++) {
+                    Enemy en = Enemies[i].GetComponent<Enemy>();
+                    en.health *= HealthMultiplier;
+                    en.speed *= SpeedMultiplier;
+                    en.worth = Mathf.FloorToInt(en.worth * MoneyMultiplier);
+                }
+
                 contr.RandomEnemies += 5;
                 break;
 

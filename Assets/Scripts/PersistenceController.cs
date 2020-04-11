@@ -103,7 +103,7 @@ public class PersistenceController : MonoBehaviour
         BasicCannonsPlaced=0;
         AdvancedCannonsPlaced=0;
         level = 1;
-        money=1500;
+        money=2000;
         health=1.0f;
         TopTowersActive = new Dictionary<string,int>();
         BottomTowersActive = new Dictionary<string,int>();
